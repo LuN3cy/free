@@ -98,5 +98,15 @@ Page({
     
     this.setData({ generated: results });
     wx.pageScrollTo({ scrollTop: 400, duration: 300 });
+  },
+  copyToClipboard(e) {
+    const { front, back } = e.currentTarget.dataset;
+    const text = `大乐透推荐：前区 [${front.join(' ')}] 后区 [${back.join(' ')}]`;
+    wx.setClipboardData({
+      data: text,
+      success: () => {
+        wx.showToast({ title: '已复制', icon: 'success' });
+      }
+    });
   }
 });

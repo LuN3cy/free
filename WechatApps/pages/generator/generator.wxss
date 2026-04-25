@@ -3,15 +3,16 @@
 }
 .label {
   font-size: 28rpx;
-  color: #475569;
+  color: #94a3b8;
   display: block;
   margin-bottom: 20rpx;
 }
 .tabs {
   display: flex;
-  background: #f1f5f9;
+  background: rgba(0, 0, 0, 0.2);
   border-radius: 16rpx;
   padding: 8rpx;
+  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 .tab {
   flex: 1;
@@ -23,29 +24,52 @@
   transition: all 0.2s;
 }
 .tab.active {
-  background: #ffffff;
-  color: #f97316;
+  background: rgba(255, 138, 0, 0.2);
+  color: #FF8A00;
   font-weight: bold;
-  box-shadow: 0 4rpx 12rpx rgba(0,0,0,0.05);
+  border: 1px solid rgba(255, 138, 0, 0.3);
 }
 .gen-btn {
-  background: #f97316;
+  background: #FF8A00;
   color: white;
   font-weight: bold;
   border-radius: 20rpx;
   margin-top: 40rpx;
   font-size: 32rpx;
   padding: 10rpx 0;
+  box-shadow: 0 4rpx 12rpx rgba(255, 138, 0, 0.3);
+}
+.gen-btn-hover {
+  background: #E67A00;
 }
 .result-card {
   padding: 30rpx;
 }
 .reason {
   font-size: 24rpx;
-  color: #64748b;
-  background: #f8fafc;
+  color: #94a3b8;
+  background: rgba(0, 0, 0, 0.2);
   padding: 20rpx;
   border-radius: 12rpx;
   margin-top: 20rpx;
   line-height: 1.5;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+.result-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+.result-idx {
+  color: #64748b;
+  font-family: monospace;
+}
+.copy-btn {
+  font-size: 24rpx;
+  background: rgba(255, 255, 255, 0.05);
+  color: #cbd5e1;
+  padding: 10rpx 20rpx;
+  border-radius: 10rpx;
+  margin: 0;
 }

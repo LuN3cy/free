@@ -2,7 +2,7 @@
   <view class="header">
     <view>
       <text class="title">历史走势</text>
-      <text class="subtitle">前区与后区冷热分布</text>
+      <text class="subtitle">分析所有收录的开奖数据，提供前区与后区的冷热分布统计</text>
     </view>
   </view>
 
@@ -12,22 +12,32 @@
     <view class="card">
       <view class="card-title">前区冷热频率 (35选5)</view>
       <view class="stat-item" wx:for="{{stats.frontHot}}" wx:key="number">
-        <view class="num-label red">{{item.number}}</view>
+        <view class="num-label red">{{item.number < 10 ? '0' + item.number : item.number}}</view>
         <view class="bar-bg">
           <view class="bar-fill red" style="width: {{(item.count / maxFront) * 100}}%"></view>
         </view>
-        <view class="count">{{item.count}}次</view>
+        <view class="count-box">
+          <text class="count-text">出现次数: <text style="color: #cbd5e1;">{{item.count}}</text></text>
+          <text class="tag hot" wx:if="{{item.count >= maxFront * 0.9}}">🔥 大热</text>
+          <text class="tag cold" wx:elif="{{item.count <= stats.frontHot[stats.frontHot.length - 1].count * 1.2}}">❄️ 极冷</text>
+          <text class="tag warm" wx:else>温号</text>
+        </view>
       </view>
     </view>
 
     <view class="card">
       <view class="card-title">后区冷热频率 (12选2)</view>
       <view class="stat-item" wx:for="{{stats.backHot}}" wx:key="number">
-        <view class="num-label blue">{{item.number}}</view>
+        <view class="num-label blue">{{item.number < 10 ? '0' + item.number : item.number}}</view>
         <view class="bar-bg">
           <view class="bar-fill blue" style="width: {{(item.count / maxBack) * 100}}%"></view>
         </view>
-        <view class="count">{{item.count}}次</view>
+        <view class="count-box">
+          <text class="count-text">出现次数: <text style="color: #cbd5e1;">{{item.count}}</text></text>
+          <text class="tag hot" wx:if="{{item.count >= maxBack * 0.9}}">🔥 大热</text>
+          <text class="tag cold" wx:elif="{{item.count <= stats.backHot[stats.backHot.length - 1].count * 1.2}}">❄️ 极冷</text>
+          <text class="tag warm" wx:else>温号</text>
+        </view>
       </view>
     </view>
   </block>

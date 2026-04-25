@@ -5,16 +5,17 @@
     "pages/history/history"
   ],
   "window": {
-    "backgroundTextStyle": "light",
-    "navigationBarBackgroundColor": "#0f172a",
-    "navigationBarTitleText": "财富自由FREE",
-    "navigationBarTextStyle": "white"
-  },
-  "tabBar": {
-    "color": "#64748b",
-    "selectedColor": "#f97316",
-    "backgroundColor": "#ffffff",
-    "list": [
+      "backgroundTextStyle": "dark",
+      "navigationBarBackgroundColor": "#0b0f19",
+      "navigationBarTitleText": "财富自由FREE",
+      "navigationBarTextStyle": "white"
+    },
+    "tabBar": {
+      "color": "#64748b",
+      "selectedColor": "#FF8A00",
+      "backgroundColor": "#0b0f19",
+      "borderStyle": "black",
+      "list": [
       {
         "pagePath": "pages/index/index",
         "text": "大盘"

@@ -2,34 +2,49 @@
   <view class="header">
     <view>
       <text class="title">号码生成</text>
-      <text class="subtitle">随机或智能预测</text>
+      <text class="subtitle">支持完全随机和基于历史大数据的加权预测生成</text>
     </view>
   </view>
 
   <view class="card">
     <view class="card-title">生成配置</view>
     <view class="config-row">
-      <text class="label">模式</text>
+      <text class="label">生成模式</text>
       <view class="tabs">
-        <view class="tab {{mode === 'random' ? 'active' : ''}}" bindtap="setMode" data-mode="random">完全随机</view>
-        <view class="tab {{mode === 'predict' ? 'active' : ''}}" bindtap="setMode" data-mode="predict">智能预测</view>
+        <view class="tab {{mode === 'random' ? 'active' : ''}}" bindtap="setMode" data-mode="random">🎲 完全随机</view>
+        <view class="tab {{mode === 'predict' ? 'active' : ''}}" bindtap="setMode" data-mode="predict">📈 频率预测</view>
+      </view>
+      <view style="font-size: 22rpx; color: #FF8A00; background: rgba(255, 138, 0, 0.05); border: 1px solid rgba(255, 138, 0, 0.1); padding: 20rpx; border-radius: 16rpx; margin-top: 20rpx; line-height: 1.5; opacity: 0.8;">
+        {{mode === 'random' ? '每个号码出现概率均等，模拟真实物理摇奖机的绝对随机性。' : '系统分析了所有历史开奖数据，计算出每个号码出现的相对频率作为权重因子。高频热号在生成过程中拥有更高的抽中概率，以此来模拟数字出现的热度趋势。'}}
       </view>
     </view>
     
     <view class="config-row">
-      <text class="label">生成组数: {{sets}}</text>
-      <slider min="1" max="10" value="{{sets}}" bindchange="setSets" activeColor="#f97316" block-color="#ffffff"/>
+      <view style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20rpx;">
+        <text class="label" style="margin-bottom: 0;">生成组数</text>
+        <text style="color: #FF8A00; font-weight: bold; background: rgba(255, 138, 0, 0.1); padding: 4rpx 16rpx; border-radius: 8rpx; border: 1px solid rgba(255, 138, 0, 0.2); font-size: 24rpx;">{{sets}} 组</text>
+      </view>
+      <slider min="1" max="10" value="{{sets}}" bindchange="setSets" activeColor="#FF8A00" backgroundColor="rgba(255,255,255,0.1)" block-color="#ffffff"/>
+      <view style="display: flex; justify-content: space-between; color: #64748b; font-size: 24rpx; padding: 0 10rpx;">
+        <text>1</text>
+        <text>5</text>
+        <text>10</text>
+      </view>
     </view>
     
-    <button class="gen-btn" bindtap="handleGenerate">立即生成</button>
+    <button class="gen-btn" hover-class="gen-btn-hover" bindtap="handleGenerate">立即生成</button>
   </view>
 
   <view class="card result-card" wx:for="{{generated}}" wx:key="index">
+    <view class="result-header">
+      <text class="result-idx">#{{index < 9 ? '0' + (index+1) : index+1}}</text>
+      <button class="copy-btn" bindtap="copyToClipboard" data-front="{{item.front}}" data-back="{{item.back}}">复制</button>
+    </view>
     <view class="balls">
       <view class="ball red" wx:for="{{item.front}}" wx:key="*this" wx:for-item="num">{{num}}</view>
       <view class="plus">+</view>
       <view class="ball blue" wx:for="{{item.back}}" wx:key="*this" wx:for-item="num">{{num}}</view>
     </view>
-    <view class="reason">{{item.reason}}</view>
+    <view class="reason">💡 {{item.reason}}</view>
   </view>
 </view>

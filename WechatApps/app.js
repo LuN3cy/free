@@ -1,7 +1,7 @@
 App({ 
   globalData: { 
-    // 请替换为你部署在 Vercel 上的真实 API 地址，例如 'https://your-app.vercel.app/api'
-    // 如果在本地微信开发者工具中使用，可以保持使用本地后端
-    apiBaseUrl: 'http://localhost:3001/api' 
+    // 这是你在 Vercel 上部署的真实后端 API 地址，这样在手机上预览或者上线后才能访问到数据
+    // 注意：在微信公众平台后台，你需要将此域名添加到 "request合法域名" 列表中
+    apiBaseUrl: 'https://free-lottery.vercel.app/api' 
   } 
 })

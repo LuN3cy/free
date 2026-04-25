@@ -6,9 +6,8 @@
 }
 .stat-item {
   display: flex;
-  align-items: center;
-  margin-bottom: 24rpx;
-  gap: 20rpx;
+  flex-direction: column;
+  margin-bottom: 40rpx;
 }
 .num-label {
   width: 56rpx;
@@ -21,19 +20,27 @@
   font-weight: bold;
   color: white;
   flex-shrink: 0;
+  margin-bottom: 16rpx;
+  border: 1px solid;
 }
 .num-label.red {
   background: #ef4444;
+  border-color: rgba(248, 113, 113, 0.5);
+  box-shadow: inset 0 0 10px rgba(255,255,255,0.05);
 }
 .num-label.blue {
   background: #3b82f6;
+  border-color: rgba(96, 165, 250, 0.5);
+  box-shadow: inset 0 0 10px rgba(255,255,255,0.05);
 }
 .bar-bg {
-  flex: 1;
-  height: 16rpx;
-  background: #f1f5f9;
+  width: 100%;
+  height: 12rpx;
+  background: rgba(0, 0, 0, 0.4);
   border-radius: 8rpx;
   overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  margin-bottom: 12rpx;
 }
 .bar-fill {
   height: 100%;
@@ -41,15 +48,27 @@
   transition: width 0.5s ease-out;
 }
 .bar-fill.red {
-  background: linear-gradient(90deg, #fca5a5, #ef4444);
+  background: linear-gradient(90deg, #ef4444, #dc2626);
+  box-shadow: 0 0 10px rgba(239, 68, 68, 0.3);
 }
 .bar-fill.blue {
-  background: linear-gradient(90deg, #93c5fd, #3b82f6);
+  background: linear-gradient(90deg, #3b82f6, #2563eb);
+  box-shadow: 0 0 10px rgba(59, 130, 246, 0.3);
 }
-.count {
+.count-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+.count-text {
   font-size: 24rpx;
-  color: #64748b;
-  width: 70rpx;
-  text-align: right;
-  flex-shrink: 0;
+  color: #94a3b8;
 }
+.tag {
+  font-size: 20rpx;
+  font-weight: bold;
+}
+.tag.hot { color: #ef4444; }
+.tag.cold { color: #3b82f6; }
+.tag.warm { color: #64748b; }

@@ -2,26 +2,36 @@
   <view class="header">
     <view>
       <text class="title">大盘概览</text>
-      <text class="subtitle">最新开奖与数据状态</text>
+      <text class="subtitle">查看最新开奖与系统数据状态</text>
     </view>
-    <button class="sync-btn" bindtap="handleSync" loading="{{syncing}}">同步数据</button>
+    <button class="sync-btn" hover-class="sync-btn-hover" bindtap="handleSync" loading="{{syncing}}">同步数据</button>
   </view>
 
   <view class="card" wx:if="{{latestRecord}}">
-    <view class="card-title">最新一期: 第 {{latestRecord.period}} 期</view>
+    <view class="card-title">最新一期开奖</view>
+    <view style="text-align: center; margin-bottom: 30rpx;">
+      <text style="background: rgba(255, 138, 0, 0.1); color: #FF8A00; border: 1px solid rgba(255, 138, 0, 0.2); padding: 6rpx 20rpx; border-radius: 30rpx; font-size: 24rpx; font-weight: 500;">第 {{latestRecord.period}} 期</text>
+    </view>
     <view class="balls">
       <view class="ball red" wx:for="{{latestRecord.front_zone}}" wx:key="*this">{{item}}</view>
       <view class="plus">+</view>
       <view class="ball blue" wx:for="{{latestRecord.back_zone}}" wx:key="*this">{{item}}</view>
     </view>
-    <view class="date">开奖日期: {{latestRecord.draw_date}}</view>
+    <view class="date">📅 开奖日期: {{latestRecord.draw_date}}</view>
   </view>
   <view class="empty" wx:elif="{{!loading}}">暂无数据，请点击同步</view>
 
   <view class="card" wx:if="{{stats}}">
     <view class="card-title">数据库状态</view>
-    <view class="stat-row">总收录期数: <text class="highlight">{{stats.totalRecords}}</text></view>
-    <view class="stat-desc">前区：35选5 | 后区：12选2</view>
-    <view class="stat-desc" style="opacity: 0.7; margin-top: 10rpx;">用于为您提供更加精准的历史频率计算及随机选号参考。</view>
+    <view class="stat-row">
+      <text>总收录期数</text>
+      <text class="highlight">{{stats.totalRecords}}</text>
+    </view>
+    <view class="stat-desc">
+      <view>基于官方历史开奖记录（自2007年起）。</view>
+      <view>前区号码：35选5</view>
+      <view>后区号码：12选2</view>
+      <view style="margin-top: 10rpx; opacity: 0.7; font-size: 20rpx;">全量数据用于为您提供更加精准的历史频率计算及随机选号参考。</view>
+    </view>
   </view>
 </view>
