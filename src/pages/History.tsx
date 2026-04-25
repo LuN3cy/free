@@ -23,12 +23,12 @@ export default function History() {
 
   return (
     <Layout>
-      <div className="flex flex-col gap-8 h-full">
+      <div className="flex flex-col gap-6 md:gap-8 h-full">
         <header className="shrink-0">
-          <h2 className="text-3xl font-bold text-slate-900 dark:text-slate-100 flex items-center gap-3 tracking-tight">
+          <h2 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-slate-100 flex items-center gap-3 tracking-tight">
             <TrendingUp className="text-brand-orange" /> 历史走势
           </h2>
-          <p className="text-slate-500 dark:text-slate-400 mt-2 text-sm">分析所有收录的开奖数据，提供前区与后区的冷热分布统计</p>
+          <p className="text-slate-500 dark:text-slate-400 mt-1 md:mt-2 text-xs md:text-sm">分析所有收录的开奖数据，提供前区与后区的冷热分布统计</p>
         </header>
 
         {loading ? (
@@ -36,14 +36,14 @@ export default function History() {
         ) : error ? (
           <div className="flex justify-center py-20 text-red-500">{error}</div>
         ) : stats ? (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 flex-1 pb-10">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8 flex-1 pb-10">
             {/* 前区统计 */}
-            <div className="glass-effect rounded-3xl p-8 shadow-sm dark:shadow-none flex flex-col h-[75vh] lg:h-auto">
-              <h3 className="text-lg font-medium mb-6 flex items-center gap-2 text-slate-800 dark:text-slate-300 shrink-0">
+            <div className="glass-effect rounded-3xl p-5 md:p-8 shadow-sm dark:shadow-none flex flex-col h-[60vh] md:h-[75vh] lg:h-auto">
+              <h3 className="text-base md:text-lg font-medium mb-4 md:mb-6 flex items-center gap-2 text-slate-800 dark:text-slate-300 shrink-0">
                 <Flame className="text-brand-orange" size={18} /> 前区冷热频率 (35选5)
               </h3>
               
-              <div className="flex flex-col gap-4 overflow-y-auto pr-4 custom-scrollbar flex-1 pb-4">
+              <div className="flex flex-col gap-3 md:gap-4 overflow-y-auto pr-2 md:pr-4 custom-scrollbar flex-1 pb-4">
                 {stats.frontHot.map((item, idx) => {
                   const percentage = (item.count / maxFrontCount) * 100;
                   const minCount = stats.frontHot[stats.frontHot.length - 1].count;
@@ -71,12 +71,12 @@ export default function History() {
             </div>
 
             {/* 后区统计 */}
-            <div className="glass-effect rounded-3xl p-8 shadow-sm dark:shadow-none flex flex-col h-[75vh] lg:h-auto">
-              <h3 className="text-lg font-medium mb-6 flex items-center gap-2 text-slate-800 dark:text-slate-300 shrink-0">
+            <div className="glass-effect rounded-3xl p-5 md:p-8 shadow-sm dark:shadow-none flex flex-col h-[50vh] md:h-[60vh] lg:h-auto mt-4 lg:mt-0">
+              <h3 className="text-base md:text-lg font-medium mb-4 md:mb-6 flex items-center gap-2 text-slate-800 dark:text-slate-300 shrink-0">
                 <Flame className="text-brand-orange" size={18} /> 后区冷热频率 (12选2)
               </h3>
               
-              <div className="flex flex-col gap-5 overflow-y-auto pr-4 custom-scrollbar flex-1 pb-4">
+              <div className="flex flex-col gap-3 md:gap-5 overflow-y-auto pr-2 md:pr-4 custom-scrollbar flex-1 pb-4">
                 {stats.backHot.map((item, idx) => {
                   const percentage = (item.count / maxBackCount) * 100;
                   const minCount = stats.backHot[stats.backHot.length - 1].count;
