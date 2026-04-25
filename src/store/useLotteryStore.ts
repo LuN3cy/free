@@ -35,7 +35,7 @@ export const useLotteryStore = create<LotteryStore>((set) => ({
   fetchLatest: async (limit = 10) => {
     set({ loading: true, error: null });
     try {
-      const res = await fetch(`/api/lottery/latest?limit=${limit}`);
+      const res = await fetch(import.meta.env.VITE_API_URL ? `${import.meta.env.VITE_API_URL}/api/lottery/latest?limit=${limit}` : `/api/lottery/latest?limit=${limit}`);
       const data = await res.json();
       if (data.success) {
         set({ records: data.data, loading: false });
@@ -50,7 +50,7 @@ export const useLotteryStore = create<LotteryStore>((set) => ({
   fetchStats: async () => {
     set({ loading: true, error: null });
     try {
-      const res = await fetch('/api/lottery/stats');
+      const res = await fetch(import.meta.env.VITE_API_URL ? `${import.meta.env.VITE_API_URL}/api/lottery/stats` : '/api/lottery/stats');
       const data = await res.json();
       if (data.success) {
         set({ stats: data.data, loading: false });
@@ -65,7 +65,7 @@ export const useLotteryStore = create<LotteryStore>((set) => ({
   syncData: async () => {
     set({ syncing: true, error: null });
     try {
-      const res = await fetch('/api/lottery/sync', { method: 'POST' });
+      const res = await fetch(import.meta.env.VITE_API_URL ? `${import.meta.env.VITE_API_URL}/api/lottery/sync` : '/api/lottery/sync', { method: 'POST' });
       const data = await res.json();
       if (data.success) {
         set({ syncing: false });
