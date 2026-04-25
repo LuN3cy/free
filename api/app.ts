@@ -14,9 +14,11 @@ import { fileURLToPath } from 'url'
 import authRoutes from './routes/auth.js'
 import lotteryRoutes from './routes/lottery.js'
 import { initDB } from './db/index.js'
+import { initialSyncIfEmpty } from './services/lotteryService.js'
 
 // Initialize database
 initDB()
+initialSyncIfEmpty().catch(console.error)
 
 // for esm mode
 const __filename = fileURLToPath(import.meta.url)

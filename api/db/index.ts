@@ -1,11 +1,21 @@
 import Database from 'better-sqlite3';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import fs from 'fs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const dbPath = path.resolve(__dirname, '../../lottery.db');
+let dbPath = path.resolve(__dirname, '../../lottery.db');
+try {
+  // Check if we can write to the directory
+  const dir = path.dirname(dbPath);
+  fs.accessSync(dir, fs.constants.W_OK);
+} catch (e) {
+  // Fallback to /tmp for serverless environments like Vercel
+  dbPath = '/tmp/lottery.db';
+}
+
 const db = new Database(dbPath, { verbose: console.log });
 
 // Initialize database
