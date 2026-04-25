@@ -36,6 +36,16 @@ export const useLotteryStore = create<LotteryStore>((set) => ({
     set({ loading: true, error: null });
     try {
       const res = await fetch(import.meta.env.VITE_API_URL ? `${import.meta.env.VITE_API_URL}/api/lottery/latest?limit=${limit}` : `/api/lottery/latest?limit=${limit}`);
+      
+      if (!res.ok) {
+        throw new Error(`请求失败 (${res.status}): 请确保后端服务已启动`);
+      }
+      
+      const contentType = res.headers.get('content-type');
+      if (!contentType || !contentType.includes('application/json')) {
+        throw new Error('接口返回格式错误，未连接到正确的后端服务');
+      }
+
       const data = await res.json();
       if (data.success) {
         set({ records: data.data, loading: false });
@@ -51,6 +61,16 @@ export const useLotteryStore = create<LotteryStore>((set) => ({
     set({ loading: true, error: null });
     try {
       const res = await fetch(import.meta.env.VITE_API_URL ? `${import.meta.env.VITE_API_URL}/api/lottery/stats` : '/api/lottery/stats');
+      
+      if (!res.ok) {
+        throw new Error(`请求失败 (${res.status}): 请确保后端服务已启动`);
+      }
+      
+      const contentType = res.headers.get('content-type');
+      if (!contentType || !contentType.includes('application/json')) {
+        throw new Error('接口返回格式错误，未连接到正确的后端服务');
+      }
+
       const data = await res.json();
       if (data.success) {
         set({ stats: data.data, loading: false });
@@ -66,6 +86,16 @@ export const useLotteryStore = create<LotteryStore>((set) => ({
     set({ syncing: true, error: null });
     try {
       const res = await fetch(import.meta.env.VITE_API_URL ? `${import.meta.env.VITE_API_URL}/api/lottery/sync` : '/api/lottery/sync', { method: 'POST' });
+      
+      if (!res.ok) {
+        throw new Error(`请求失败 (${res.status}): 请确保后端服务已启动`);
+      }
+      
+      const contentType = res.headers.get('content-type');
+      if (!contentType || !contentType.includes('application/json')) {
+        throw new Error('接口返回格式错误，未连接到正确的后端服务');
+      }
+
       const data = await res.json();
       if (data.success) {
         set({ syncing: false });
