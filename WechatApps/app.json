@@ -1,0 +1,34 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/generator/generator",
+    "pages/history/history"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#0f172a",
+    "navigationBarTitleText": "财富自由FREE",
+    "navigationBarTextStyle": "white"
+  },
+  "tabBar": {
+    "color": "#64748b",
+    "selectedColor": "#f97316",
+    "backgroundColor": "#ffffff",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "大盘"
+      },
+      {
+        "pagePath": "pages/generator/generator",
+        "text": "生成"
+      },
+      {
+        "pagePath": "pages/history/history",
+        "text": "走势"
+      }
+    ]
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}

@@ -1,0 +1,34 @@
+<view class="container">
+  <view class="header">
+    <view>
+      <text class="title">历史走势</text>
+      <text class="subtitle">前区与后区冷热分布</text>
+    </view>
+  </view>
+
+  <view wx:if="{{!stats}}" class="loading">加载中...</view>
+  
+  <block wx:else>
+    <view class="card">
+      <view class="card-title">前区冷热频率 (35选5)</view>
+      <view class="stat-item" wx:for="{{stats.frontHot}}" wx:key="number">
+        <view class="num-label red">{{item.number}}</view>
+        <view class="bar-bg">
+          <view class="bar-fill red" style="width: {{(item.count / maxFront) * 100}}%"></view>
+        </view>
+        <view class="count">{{item.count}}次</view>
+      </view>
+    </view>
+
+    <view class="card">
+      <view class="card-title">后区冷热频率 (12选2)</view>
+      <view class="stat-item" wx:for="{{stats.backHot}}" wx:key="number">
+        <view class="num-label blue">{{item.number}}</view>
+        <view class="bar-bg">
+          <view class="bar-fill blue" style="width: {{(item.count / maxBack) * 100}}%"></view>
+        </view>
+        <view class="count">{{item.count}}次</view>
+      </view>
+    </view>
+  </block>
+</view>

@@ -1,0 +1,13 @@
+{
+  "miniprogramRoot": "./",
+  "projectname": "SuperLotto",
+  "description": "大乐透预测生成器",
+  "appid": "touristappid",
+  "setting": {
+    "urlCheck": false,
+    "es6": true,
+    "postcss": true,
+    "minified": true
+  },
+  "compileType": "miniprogram"
+}

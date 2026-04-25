@@ -1,0 +1,27 @@
+<view class="container">
+  <view class="header">
+    <view>
+      <text class="title">大盘概览</text>
+      <text class="subtitle">最新开奖与数据状态</text>
+    </view>
+    <button class="sync-btn" bindtap="handleSync" loading="{{syncing}}">同步数据</button>
+  </view>
+
+  <view class="card" wx:if="{{latestRecord}}">
+    <view class="card-title">最新一期: 第 {{latestRecord.period}} 期</view>
+    <view class="balls">
+      <view class="ball red" wx:for="{{latestRecord.front_zone}}" wx:key="*this">{{item}}</view>
+      <view class="plus">+</view>
+      <view class="ball blue" wx:for="{{latestRecord.back_zone}}" wx:key="*this">{{item}}</view>
+    </view>
+    <view class="date">开奖日期: {{latestRecord.draw_date}}</view>
+  </view>
+  <view class="empty" wx:elif="{{!loading}}">暂无数据，请点击同步</view>
+
+  <view class="card" wx:if="{{stats}}">
+    <view class="card-title">数据库状态</view>
+    <view class="stat-row">总收录期数: <text class="highlight">{{stats.totalRecords}}</text></view>
+    <view class="stat-desc">前区：35选5 | 后区：12选2</view>
+    <view class="stat-desc" style="opacity: 0.7; margin-top: 10rpx;">用于为您提供更加精准的历史频率计算及随机选号参考。</view>
+  </view>
+</view>

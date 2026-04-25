@@ -1,0 +1,35 @@
+<view class="container">
+  <view class="header">
+    <view>
+      <text class="title">号码生成</text>
+      <text class="subtitle">随机或智能预测</text>
+    </view>
+  </view>
+
+  <view class="card">
+    <view class="card-title">生成配置</view>
+    <view class="config-row">
+      <text class="label">模式</text>
+      <view class="tabs">
+        <view class="tab {{mode === 'random' ? 'active' : ''}}" bindtap="setMode" data-mode="random">完全随机</view>
+        <view class="tab {{mode === 'predict' ? 'active' : ''}}" bindtap="setMode" data-mode="predict">智能预测</view>
+      </view>
+    </view>
+    
+    <view class="config-row">
+      <text class="label">生成组数: {{sets}}</text>
+      <slider min="1" max="10" value="{{sets}}" bindchange="setSets" activeColor="#f97316" block-color="#ffffff"/>
+    </view>
+    
+    <button class="gen-btn" bindtap="handleGenerate">立即生成</button>
+  </view>
+
+  <view class="card result-card" wx:for="{{generated}}" wx:key="index">
+    <view class="balls">
+      <view class="ball red" wx:for="{{item.front}}" wx:key="*this" wx:for-item="num">{{num}}</view>
+      <view class="plus">+</view>
+      <view class="ball blue" wx:for="{{item.back}}" wx:key="*this" wx:for-item="num">{{num}}</view>
+    </view>
+    <view class="reason">{{item.reason}}</view>
+  </view>
+</view>
