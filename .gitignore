@@ -23,3 +23,9 @@ dist-ssr
 *.sln
 *.sw?
 .vite
+
+# Wechat Mini Program (WechatApps / WechatCloudApp directory)
+WechatApps/
+WechatCloudApp/
+create-weapp.cjs
+create-wechat-cloud.cjs

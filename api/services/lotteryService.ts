@@ -1,4 +1,3 @@
-import { execSync } from 'child_process';
 import * as cheerio from 'cheerio';
 import db from '../db/index.js';
 
@@ -9,39 +8,60 @@ interface ParsedRecord {
   drawDate: string;
 }
 
-const LOTTERY_HTML_URL = 'https://datachart.500.com/dlt/history/newinc/history.php?start=00000&end=99999';
+const LOTTERY_HTML_URL = 'https://cp.ip138.com/daletou/';
 
 export const syncLotteryData = async (): Promise<{ syncedCount: number; message: string }> => {
   let syncedCount = 0;
 
   try {
-    console.log('Fetching lottery HTML data via curl...');
-    const html = execSync(`curl -s "${LOTTERY_HTML_URL}"`, { maxBuffer: 10 * 1024 * 1024 }).toString();
+    console.log('Fetching lottery HTML data via fetch...');
+    const response = await fetch(LOTTERY_HTML_URL, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0'
+      }
+    });
+    if (!response.ok) {
+      throw new Error(`Upstream fetch failed: ${response.status}`);
+    }
+    const html = await response.text();
     const $ = cheerio.load(html);
     const records: ParsedRecord[] = [];
 
-    $('#tablelist tr.t_tr1').each((index, element) => {
-      const tds = $(element).find('td');
-      if (tds.length >= 14) {
-        const period = $(tds[0]).text().trim();
-        const f1 = $(tds[1]).text().trim();
-        const f2 = $(tds[2]).text().trim();
-        const f3 = $(tds[3]).text().trim();
-        const f4 = $(tds[4]).text().trim();
-        const f5 = $(tds[5]).text().trim();
-        const b1 = $(tds[6]).text().trim();
-        const b2 = $(tds[7]).text().trim();
-        const drawDate = $(tds[14]).text().trim();
+    const pad2 = (n: string) => n.trim().padStart(2, '0');
 
-        if (period && f1 && f5 && b2 && drawDate) {
-          records.push({
-            period,
-            frontZone: `${f1},${f2},${f3},${f4},${f5}`,
-            backZone: `${b1},${b2}`,
-            drawDate
-          });
-        }
-      }
+    $('table').each((_tIdx, table) => {
+      const tableText = $(table).text();
+      if (!tableText.includes('期号') || !tableText.includes('时间') || !tableText.includes('开奖结果')) return;
+
+      $(table).find('tr').each((_rIdx, tr) => {
+        const tds = $(tr).find('td');
+        if (tds.length !== 3) return;
+
+        const periodRaw = $(tds[0]).text().trim();
+        const mmdd = $(tds[1]).text().trim();
+        const nums = $(tds[2]).text().trim().replace(/\s+/g, ' ');
+
+        if (!periodRaw || !mmdd || !nums) return;
+
+        const period = periodRaw.length >= 7 ? periodRaw.slice(2) : periodRaw;
+        const year = periodRaw.length >= 4 ? periodRaw.slice(0, 4) : `20${period.slice(0, 2)}`;
+        const [mm, dd] = mmdd.split('-');
+        if (!year || !mm || !dd) return;
+
+        const parts = nums.split(' ').filter(Boolean);
+        if (parts.length < 7) return;
+
+        const front = parts.slice(0, 5).map(pad2);
+        const back = parts.slice(5, 7).map(pad2);
+        const drawDate = `${year}-${pad2(mm)}-${pad2(dd)}`;
+
+        records.push({
+          period,
+          frontZone: front.join(','),
+          backZone: back.join(','),
+          drawDate
+        });
+      });
     });
 
     if (records.length === 0) {
@@ -50,6 +70,9 @@ export const syncLotteryData = async (): Promise<{ syncedCount: number; message:
 
     console.log(`Parsed ${records.length} records. Inserting into database...`);
 
+    const deleteLegacyStmt = db.prepare(`
+      DELETE FROM lottery_records WHERE period = ?
+    `);
     const insertStmt = db.prepare(`
       INSERT OR IGNORE INTO lottery_records (period, front_zone, back_zone, draw_date)
       VALUES (?, ?, ?, ?)
@@ -58,6 +81,10 @@ export const syncLotteryData = async (): Promise<{ syncedCount: number; message:
     const insertMany = db.transaction((recs: ParsedRecord[]) => {
       let inserted = 0;
       for (const rec of recs) {
+        const legacyPeriod = rec.period.length === 5 ? `20${rec.period}` : null;
+        if (legacyPeriod) {
+          deleteLegacyStmt.run(legacyPeriod);
+        }
         const result = insertStmt.run(rec.period, rec.frontZone, rec.backZone, rec.drawDate);
         if (result.changes > 0) {
           inserted++;
@@ -70,8 +97,9 @@ export const syncLotteryData = async (): Promise<{ syncedCount: number; message:
 
     return { syncedCount, message: 'Sync successful' };
   } catch (error: any) {
-    console.error('Error syncing lottery data:', error.message);
-    throw new Error('Failed to sync lottery data');
+    const msg = error?.message ? String(error.message) : 'Unknown error';
+    console.error('Error syncing lottery data:', msg);
+    throw new Error(`Failed to sync lottery data: ${msg}`);
   }
 };
 

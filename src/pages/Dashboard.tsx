@@ -32,19 +32,19 @@ export default function Dashboard() {
       <div className="flex flex-col gap-6">
         <header className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <h2 className="text-3xl font-bold text-slate-900 dark:text-slate-100 tracking-tight">大盘概览</h2>
-            <p className="text-slate-500 dark:text-slate-400 mt-2 text-sm">查看最新开奖与系统数据状态</p>
+            <h2 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-slate-100 tracking-tight">大盘概览</h2>
+            <p className="text-slate-500 dark:text-slate-400 mt-1 md:mt-2 text-xs md:text-sm">查看最新开奖与系统数据状态</p>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex flex-col md:flex-row md:items-center gap-3 md:gap-4">
             {syncMessage && (
-              <span className={`text-sm font-medium ${syncMessage.includes('失败') ? 'text-red-500 dark:text-red-400' : 'text-emerald-500 dark:text-emerald-400'}`}>
+              <span className={`text-xs md:text-sm font-medium text-center md:text-left ${syncMessage.includes('失败') ? 'text-red-500 dark:text-red-400' : 'text-emerald-500 dark:text-emerald-400'}`}>
                 {syncMessage}
               </span>
             )}
             <button
               onClick={handleSync}
               disabled={syncing}
-              className="flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold bg-[#FF8A00] text-white hover:bg-[#E67A00] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 shadow-md"
+              className="flex items-center justify-center gap-2 w-full md:w-auto px-5 py-2.5 rounded-xl font-bold bg-[#FF8A00] text-white hover:bg-[#E67A00] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 shadow-md"
             >
               <RefreshCw size={16} className={syncing ? 'animate-spin' : ''} />
               {syncing ? '正在同步数据...' : '一键同步最新数据'}

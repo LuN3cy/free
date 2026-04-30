@@ -134,38 +134,38 @@ export default function Generator() {
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           {/* Controls */}
-          <div className="lg:col-span-4 glass-effect rounded-3xl p-8 h-fit shadow-sm dark:shadow-none">
-            <h3 className="text-lg font-medium mb-8 flex items-center gap-2 text-slate-800 dark:text-slate-300">
+          <div className="lg:col-span-4 glass-effect rounded-3xl p-6 md:p-8 h-fit shadow-sm dark:shadow-none">
+            <h3 className="text-lg font-medium mb-6 md:mb-8 flex items-center gap-2 text-slate-800 dark:text-slate-300">
               <Settings2 className="text-brand-orange" size={18} />
               生成配置
             </h3>
 
-            <div className="space-y-8">
+            <div className="space-y-6 md:space-y-8">
               <div>
-                <label className="block text-sm font-medium text-slate-600 dark:text-slate-400 mb-4">生成模式</label>
+                <label className="block text-sm font-medium text-slate-600 dark:text-slate-400 mb-3 md:mb-4">生成模式</label>
                 <div className="flex bg-slate-100 dark:bg-black/20 p-1 rounded-xl border border-slate-200 dark:border-white/5 relative">
                   <div 
                     className={`absolute inset-y-1 w-[calc(50%-4px)] bg-white dark:bg-brand-orange/20 border border-slate-200 dark:border-brand-orange/30 rounded-lg transition-transform duration-300 shadow-sm dark:shadow-none ${mode === 'predict' ? 'translate-x-full' : 'translate-x-0'}`}
                   ></div>
                   <button
                     onClick={() => setMode('random')}
-                    className={`flex-1 py-2.5 text-sm font-medium rounded-lg transition-all relative z-10 ${mode === 'random' ? 'text-slate-900 dark:text-brand-orange' : 'text-slate-500 hover:text-slate-700 dark:text-slate-500 dark:hover:text-slate-300'}`}
+                    className={`flex-1 py-2.5 text-xs md:text-sm font-medium rounded-lg transition-all relative z-10 ${mode === 'random' ? 'text-slate-900 dark:text-brand-orange' : 'text-slate-500 hover:text-slate-700 dark:text-slate-500 dark:hover:text-slate-300'}`}
                   >
                     🎲 完全随机
                   </button>
                   <button
                     onClick={() => setMode('predict')}
-                    className={`flex-1 py-2.5 text-sm font-medium rounded-lg transition-all relative z-10 ${mode === 'predict' ? 'text-slate-900 dark:text-brand-orange' : 'text-slate-500 hover:text-slate-700 dark:text-slate-500 dark:hover:text-slate-300'}`}
+                    className={`flex-1 py-2.5 text-xs md:text-sm font-medium rounded-lg transition-all relative z-10 ${mode === 'predict' ? 'text-slate-900 dark:text-brand-orange' : 'text-slate-500 hover:text-slate-700 dark:text-slate-500 dark:hover:text-slate-300'}`}
                   >
                     📈 频率预测
                   </button>
                 </div>
                 
-                <div className="mt-4 p-4 rounded-xl bg-slate-50 dark:bg-brand-orange/5 border border-slate-200 dark:border-brand-orange/10">
+                <div className="mt-4 p-3 md:p-4 rounded-xl bg-slate-50 dark:bg-brand-orange/5 border border-slate-200 dark:border-brand-orange/10">
                   <p className="text-xs leading-relaxed text-slate-600 dark:text-brand-orange/70">
                     {mode === 'random' 
                       ? '每个号码出现概率均等，模拟真实物理摇奖机的绝对随机性。' 
-                      : '采用大数定律与加权随机算法：系统分析了所有历史开奖数据，计算出每个号码出现的相对频率作为权重因子。高频热号在生成过程中拥有更高的抽中概率，以此来模拟数字出现的热度趋势。'}
+                      : '系统分析了所有历史开奖数据，计算出每个号码出现的相对频率作为权重因子。高频热号在生成过程中拥有更高的抽中概率，以此来模拟数字出现的热度趋势。'}
                   </p>
                 </div>
               </div>
@@ -173,7 +173,7 @@ export default function Generator() {
               <div>
                 <label className="block text-sm font-medium text-slate-600 dark:text-slate-400 mb-4 flex justify-between items-center">
                   <span>生成组数</span>
-                  <span className="text-brand-orange font-semibold bg-brand-orange/10 px-2 py-0.5 rounded border border-brand-orange/20">{sets} 组</span>
+                  <span className="text-brand-orange text-xs md:text-sm font-semibold bg-brand-orange/10 px-2 py-0.5 rounded border border-brand-orange/20">{sets} 组</span>
                 </label>
                 <input
                   type="range"
@@ -192,7 +192,7 @@ export default function Generator() {
 
               <button
                 onClick={handleGenerate}
-                className="w-full mt-2 bg-[#FF8A00] text-white font-bold py-3.5 rounded-xl hover:bg-[#E67A00] transition-all duration-300 active:scale-95 flex items-center justify-center gap-2 shadow-md"
+                className="w-full mt-2 bg-[#FF8A00] text-white font-bold py-3.5 rounded-xl hover:bg-[#E67A00] transition-all duration-300 active:scale-95 flex items-center justify-center gap-2 shadow-md text-sm md:text-base"
               >
                 <Zap size={18} className="fill-white" />
                 立即生成
@@ -202,30 +202,30 @@ export default function Generator() {
 
           {/* Results */}
           <div className="lg:col-span-8">
-            <div className="glass-effect rounded-3xl p-8 min-h-[500px] shadow-sm dark:shadow-none">
-              <h3 className="text-lg font-medium mb-8 text-slate-800 dark:text-slate-300">推荐结果</h3>
+            <div className="glass-effect rounded-3xl p-4 md:p-8 min-h-[400px] md:min-h-[500px] shadow-sm dark:shadow-none">
+              <h3 className="text-lg font-medium mb-6 md:mb-8 text-slate-800 dark:text-slate-300 px-2 md:px-0">推荐结果</h3>
               
               {generated.length === 0 ? (
-                <div className="h-full flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 min-h-[300px]">
+                <div className="h-full flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 min-h-[250px] md:min-h-[300px]">
                   <Dices size={48} className="mb-4 opacity-40 dark:opacity-20 text-brand-orange" />
-                  <p className="text-sm">点击左侧按钮生成您的幸运号码</p>
+                  <p className="text-sm">点击生成您的幸运号码</p>
                 </div>
               ) : (
                 <div className="space-y-4">
                   {generated.map((res, idx) => (
-                    <div key={idx} className="bg-slate-50 dark:bg-black/20 border border-slate-200 dark:border-white/5 hover:border-brand-orange/30 rounded-2xl p-5 flex flex-col group transition-all duration-300 hover:shadow-md dark:hover:shadow-[0_0_20px_rgba(255,138,0,0.05)]">
-                      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                        <div className="flex items-center gap-4">
-                          <span className="w-8 text-slate-400 dark:text-slate-600 font-mono text-sm font-medium">#{String(idx + 1).padStart(2, '0')}</span>
-                          <div className="flex flex-wrap gap-2">
+                    <div key={idx} className="bg-slate-50 dark:bg-black/20 border border-slate-200 dark:border-white/5 hover:border-brand-orange/30 rounded-2xl p-4 md:p-5 flex flex-col group transition-all duration-300 hover:shadow-md dark:hover:shadow-[0_0_20px_rgba(255,138,0,0.05)]">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                        <div className="flex items-center gap-2 md:gap-4 w-full sm:w-auto overflow-x-auto custom-scrollbar pb-2 sm:pb-0">
+                          <span className="w-6 md:w-8 shrink-0 text-slate-400 dark:text-slate-600 font-mono text-xs md:text-sm font-medium">#{String(idx + 1).padStart(2, '0')}</span>
+                          <div className="flex flex-nowrap shrink-0 gap-1.5 md:gap-2">
                             {res.front.map((n, i) => (
-                              <span key={`f-${i}`} className="w-10 h-10 rounded-full bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/50 text-slate-700 dark:text-slate-300 flex items-center justify-center font-medium text-base shadow-sm dark:shadow-[inset_0_0_10px_rgba(255,255,255,0.02)]">
+                              <span key={`f-${i}`} className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/50 text-slate-700 dark:text-slate-300 flex items-center justify-center font-medium text-sm md:text-base shadow-sm dark:shadow-[inset_0_0_10px_rgba(255,255,255,0.02)]">
                                 {n}
                               </span>
                             ))}
-                            <span className="w-4 flex items-center justify-center text-slate-400 dark:text-slate-700 font-light">+</span>
+                            <span className="w-3 md:w-4 flex items-center justify-center text-slate-400 dark:text-slate-700 font-light">+</span>
                             {res.back.map((n, i) => (
-                              <span key={`b-${i}`} className="w-10 h-10 rounded-full bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-500/30 text-blue-600 dark:text-blue-400 flex items-center justify-center font-medium text-base shadow-sm dark:shadow-[inset_0_0_10px_rgba(59,130,246,0.1)]">
+                              <span key={`b-${i}`} className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-500/30 text-blue-600 dark:text-blue-400 flex items-center justify-center font-medium text-sm md:text-base shadow-sm dark:shadow-[inset_0_0_10px_rgba(59,130,246,0.1)]">
                                 {n}
                               </span>
                             ))}
@@ -233,20 +233,20 @@ export default function Generator() {
                         </div>
                         <button
                           onClick={() => copyToClipboard(res.front, res.back, idx)}
-                          className={`px-4 py-2 rounded-lg text-sm font-medium flex items-center justify-center gap-2 transition-all md:w-auto w-full ${
+                          className={`px-4 py-2 rounded-lg text-xs md:text-sm font-medium flex items-center justify-center gap-2 transition-all w-full sm:w-auto shrink-0 ${
                             copied === idx 
                               ? 'bg-brand-orange/10 dark:bg-brand-orange/20 text-brand-orange border border-brand-orange/30' 
                               : 'bg-white dark:bg-white/5 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-white/10 hover:text-slate-900 dark:hover:text-slate-300 border border-slate-200 dark:border-transparent shadow-sm dark:shadow-none'
                           }`}
                         >
-                          {copied === idx ? <CheckCircle2 size={16} /> : <Copy size={16} />}
+                          {copied === idx ? <CheckCircle2 size={14} /> : <Copy size={14} />}
                           {copied === idx ? '已复制' : '复制'}
                         </button>
                       </div>
                       
                       {/* Reason Subtext */}
-                      <div className="mt-4 pt-3 border-t border-slate-200 dark:border-white/5 flex items-start gap-2 text-xs text-slate-500 dark:text-slate-500">
-                        <Lightbulb size={14} className="text-brand-orange/70 shrink-0 mt-0.5" />
+                      <div className="mt-3 md:mt-4 pt-3 border-t border-slate-200 dark:border-white/5 flex items-start gap-2 text-[10px] md:text-xs text-slate-500 dark:text-slate-500">
+                        <Lightbulb size={12} className="text-brand-orange/70 shrink-0 mt-0.5" />
                         <p className="leading-relaxed">{res.reason}</p>
                       </div>
                     </div>

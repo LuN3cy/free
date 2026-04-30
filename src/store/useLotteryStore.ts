@@ -38,7 +38,13 @@ export const useLotteryStore = create<LotteryStore>((set) => ({
       const res = await fetch(import.meta.env.VITE_API_URL ? `${import.meta.env.VITE_API_URL}/api/lottery/latest?limit=${limit}` : `/api/lottery/latest?limit=${limit}`);
       
       if (!res.ok) {
-        throw new Error(`请求失败 (${res.status}): 请确保后端服务已启动`);
+        const contentType = res.headers.get('content-type') || '';
+        if (contentType.includes('application/json')) {
+          const errJson = await res.json().catch(() => null);
+          throw new Error(errJson?.error || `请求失败 (${res.status})`);
+        }
+        const text = await res.text().catch(() => '');
+        throw new Error(`请求失败 (${res.status}): ${text.slice(0, 120)}`);
       }
       
       const contentType = res.headers.get('content-type');
@@ -63,7 +69,13 @@ export const useLotteryStore = create<LotteryStore>((set) => ({
       const res = await fetch(import.meta.env.VITE_API_URL ? `${import.meta.env.VITE_API_URL}/api/lottery/stats` : '/api/lottery/stats');
       
       if (!res.ok) {
-        throw new Error(`请求失败 (${res.status}): 请确保后端服务已启动`);
+        const contentType = res.headers.get('content-type') || '';
+        if (contentType.includes('application/json')) {
+          const errJson = await res.json().catch(() => null);
+          throw new Error(errJson?.error || `请求失败 (${res.status})`);
+        }
+        const text = await res.text().catch(() => '');
+        throw new Error(`请求失败 (${res.status}): ${text.slice(0, 120)}`);
       }
       
       const contentType = res.headers.get('content-type');
@@ -88,7 +100,13 @@ export const useLotteryStore = create<LotteryStore>((set) => ({
       const res = await fetch(import.meta.env.VITE_API_URL ? `${import.meta.env.VITE_API_URL}/api/lottery/sync` : '/api/lottery/sync', { method: 'POST' });
       
       if (!res.ok) {
-        throw new Error(`请求失败 (${res.status}): 请确保后端服务已启动`);
+        const contentType = res.headers.get('content-type') || '';
+        if (contentType.includes('application/json')) {
+          const errJson = await res.json().catch(() => null);
+          throw new Error(errJson?.error || `请求失败 (${res.status})`);
+        }
+        const text = await res.text().catch(() => '');
+        throw new Error(`请求失败 (${res.status}): ${text.slice(0, 120)}`);
       }
       
       const contentType = res.headers.get('content-type');
