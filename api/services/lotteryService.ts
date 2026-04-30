@@ -1,3 +1,4 @@
+import axios from 'axios';
 import * as cheerio from 'cheerio';
 import db from '../db/index.js';
 
@@ -9,63 +10,126 @@ interface ParsedRecord {
 }
 
 const LOTTERY_HTML_URL = 'https://cp.ip138.com/daletou/';
+const LOTTERY_FALLBACK_URL = 'https://kjh.518158.cn/open/dlt/list_100.html';
+const LOTTERY_FALLBACK_ORIGIN = 'https://kjh.518158.cn';
 
-export const syncLotteryData = async (): Promise<{ syncedCount: number; message: string }> => {
-  let syncedCount = 0;
-
+const fetchHtml = async (url: string) => {
   try {
-    console.log('Fetching lottery HTML data via fetch...');
-    const response = await fetch(LOTTERY_HTML_URL, {
+    const res = await axios.get(url, {
+      timeout: 15000,
+      responseType: 'text',
       headers: {
-        'User-Agent': 'Mozilla/5.0'
+        'User-Agent': 'Mozilla/5.0',
+        Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
+      },
+      validateStatus: () => true
+    });
+    if (res.status >= 200 && res.status < 300 && typeof res.data === 'string') {
+      return res.data;
+    }
+    throw new Error(`Upstream fetch failed: ${res.status}`);
+  } catch (_axiosErr) {
+    const response = await fetch(url, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0',
+        Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
       }
     });
     if (!response.ok) {
       throw new Error(`Upstream fetch failed: ${response.status}`);
     }
-    const html = await response.text();
-    const $ = cheerio.load(html);
-    const records: ParsedRecord[] = [];
+    return await response.text();
+  }
+};
 
+export const syncLotteryData = async (): Promise<{ syncedCount: number; message: string }> => {
+  let syncedCount = 0;
+
+  try {
+    const records: ParsedRecord[] = [];
     const pad2 = (n: string) => n.trim().padStart(2, '0');
 
-    $('table').each((_tIdx, table) => {
-      const tableText = $(table).text();
-      if (!tableText.includes('期号') || !tableText.includes('时间') || !tableText.includes('开奖结果')) return;
+    let primaryError: string | null = null;
+    try {
+      const ip138Html = await fetchHtml(LOTTERY_HTML_URL);
+      const $ip138 = cheerio.load(ip138Html);
 
-      $(table).find('tr').each((_rIdx, tr) => {
-        const tds = $(tr).find('td');
-        if (tds.length !== 3) return;
+      $ip138('table').each((_tIdx, table) => {
+        const tableText = $ip138(table).text();
+        if (!tableText.includes('期号') || !tableText.includes('时间') || !tableText.includes('开奖结果')) return;
 
-        const periodRaw = $(tds[0]).text().trim();
-        const mmdd = $(tds[1]).text().trim();
-        const nums = $(tds[2]).text().trim().replace(/\s+/g, ' ');
+        $ip138(table).find('tr').each((_rIdx, tr) => {
+          const tds = $ip138(tr).find('td');
+          if (tds.length !== 3) return;
 
-        if (!periodRaw || !mmdd || !nums) return;
+          const periodRaw = $ip138(tds[0]).text().trim();
+          const mmdd = $ip138(tds[1]).text().trim();
+          const nums = $ip138(tds[2]).text().trim().replace(/\s+/g, ' ');
 
-        const period = periodRaw.length >= 7 ? periodRaw.slice(2) : periodRaw;
-        const year = periodRaw.length >= 4 ? periodRaw.slice(0, 4) : `20${period.slice(0, 2)}`;
-        const [mm, dd] = mmdd.split('-');
-        if (!year || !mm || !dd) return;
+          if (!periodRaw || !mmdd || !nums) return;
 
-        const parts = nums.split(' ').filter(Boolean);
-        if (parts.length < 7) return;
+          const period = periodRaw.length >= 7 ? periodRaw.slice(2) : periodRaw;
+          const year = periodRaw.length >= 4 ? periodRaw.slice(0, 4) : `20${period.slice(0, 2)}`;
+          const [mm, dd] = mmdd.split('-');
+          if (!year || !mm || !dd) return;
 
-        const front = parts.slice(0, 5).map(pad2);
-        const back = parts.slice(5, 7).map(pad2);
-        const drawDate = `${year}-${pad2(mm)}-${pad2(dd)}`;
+          const parts = nums.split(' ').filter(Boolean);
+          if (parts.length < 7) return;
 
-        records.push({
-          period,
-          frontZone: front.join(','),
-          backZone: back.join(','),
-          drawDate
+          const front = parts.slice(0, 5).map(pad2);
+          const back = parts.slice(5, 7).map(pad2);
+          const drawDate = `${year}-${pad2(mm)}-${pad2(dd)}`;
+
+          records.push({
+            period,
+            frontZone: front.join(','),
+            backZone: back.join(','),
+            drawDate
+          });
         });
       });
-    });
+    } catch (e: any) {
+      primaryError = e?.message ? String(e.message) : 'primary source failed';
+    }
 
     if (records.length === 0) {
-      throw new Error('No records found in HTML. Layout might have changed.');
+      const fallbackHtml = await fetchHtml(LOTTERY_FALLBACK_URL);
+      const $fallback = cheerio.load(fallbackHtml);
+      const items: Array<{ issue: string; numbers: string; href: string }> = [];
+
+      $fallback('tr').each((_idx, tr) => {
+        const a = $fallback(tr).find('a[href^="/open/dlt/"]');
+        if (!a.length) return;
+        const href = a.attr('href') || '';
+        const issue = href.match(/(\d{7})\.html/)?.[1];
+        if (!issue) return;
+        const tds = $fallback(tr).find('td').map((_, td) => $fallback(td).text().trim().replace(/\s+/g, ' ')).get();
+        const numbers = tds[4];
+        if (!numbers || !numbers.includes('+')) return;
+        items.push({ issue, numbers, href });
+      });
+
+      for (const item of items.slice(0, 50)) {
+        const detailHtml = await fetchHtml(`${LOTTERY_FALLBACK_ORIGIN}${item.href}`);
+        const date = detailHtml.match(/开奖时间：\s*\*{0,2}(\d{4}-\d{2}-\d{2})/)?.[1] || detailHtml.match(/开奖时间：\s*(\d{4}-\d{2}-\d{2})/)?.[1];
+        if (!date) continue;
+
+        const [frontStr, backStr] = item.numbers.split('+');
+        const front = frontStr.trim().split(/\s+/).filter(Boolean).slice(0, 5).map(pad2);
+        const back = backStr.trim().split(/\s+/).filter(Boolean).slice(0, 2).map(pad2);
+        if (front.length !== 5 || back.length !== 2) continue;
+
+        records.push({
+          period: item.issue.slice(2),
+          frontZone: front.join(','),
+          backZone: back.join(','),
+          drawDate: date
+        });
+      }
+    }
+
+    if (records.length === 0) {
+      throw new Error(primaryError ? `No records found. Primary error: ${primaryError}` : 'No records found in HTML. Layout might have changed.');
     }
 
     console.log(`Parsed ${records.length} records. Inserting into database...`);
